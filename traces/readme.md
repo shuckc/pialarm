@@ -4,7 +4,9 @@ You can open the log files using the Salae Logic software from https://www.salea
 
 ![Screenshot of logic traces](logic-screenshot.png)
 
-Downloading alarm log data. 19200 baud
+Put the COM port on the pannel into 'nothing connected' mode. Like this the pannel waits for incoming commands on any of the supported protocols. Simple Protocol inputs are wrapped in `\` and `/` characters, responses are terminated with `\r\n`.
+
+Downloading alarm log data.
 
     <  \W12345678/
     >  OK\r\n
@@ -25,10 +27,10 @@ Downloading alarm log data. 19200 baud
 
 
 After re-init panel
+
     > \G0/
     < 0x141 0x00 \r\n
     > \G2 0x140 0x00 /
-
 
 
 Wierd login

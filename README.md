@@ -1,6 +1,6 @@
 
 # pialarm
-Have a Texecom alarm panel? This repository contains scripts and a webserver to speak to the panel over the UART serial ports, ideally from a raspberry pi computer within the alarm panel itself, to provide remote monitoring and alarm escalation over the internet.
+Have a Texecom Premier alarm panel? This repository contains scripts and a webserver to speak to the panel over the UART serial ports, ideally from a raspberry pi computer within the alarm panel itself, to provide remote monitoring and alarm escalation over the internet.
 
 The project emultates some of the functionality of Wintex, the Texecom windows-based configuration system, and also uses parts of the Cestron protocol for real-time event monitoring. It will also speak the monitoring protocol to allow the panel to monitor the uptime of the raspberry pi and communicate alarms.
 
@@ -21,11 +21,12 @@ Install a blank `rasbian` install to an SD Card (ideally skipping NOOBS). Boot u
 It is necessary to diable the serial `tty` that raspian attaches to `/dev/ttyACM0` in order to have this working. Instructions to do this can be found online, it is a simple matter of running `sudo raspi-config` and disabling the serial tty under `5 Interfacing Options` -> `P6 Serial` -> `No` -> `Yes` -> `OK`, giving this summary:
 
     The serial login shell is disabled
-    The serial interface is enabled  
+    The serial interface is enabled
 
 Now install the contents of this repository to `~/pialarm` as follows:
-    
-    git clone git@github.com:shuckc/pialarm.git
+
+	$ sudo apt-get install git
+    $ git clone https://github.com/shuckc/pialarm.git
 
 ### Wiring
 First I used a couple of FTDI USB external COM ports (5V tolerant) as a proof of concept. However it is much neater to omit these and use the GPIO pins on the pi directly. The COM ports on the alarm mainboard all drive `Tx` to 5V logic levels, with a series protection resistor of ~9.1kOhm, which needs to be accounted for in the voltage divider to reduce to 3.3V logic for the raspberry pi GPIO pins. Since the protection resistor is quite large, I used this as the top resister in the divider chain, with a bottom resistor of 15kOhm. For Rpi -> Pannel, I drove the panel's Rx pin directory with no problems.

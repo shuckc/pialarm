@@ -1,5 +1,5 @@
 # pialarm
-Hava a Texecom alarm panel? This repository contains scripts and a webserver to speak to the panel over the UART serial ports, ideally from a raspberry pi computer within the alarm pannel itself.
+Hava a Texecom alarm panel? This repository contains scripts and a webserver to speak to the panel over the UART serial ports, ideally from a raspberry pi computer within the alarm pannel itself, to provide remote monitoring and alarm escalation.
 
 The project emultates some of the functionality of Wintex, the Texecom windows-based configuration system, and also uses parts of the Cestron protocol for real-time event monitoring. It will also speak the monitoring protocol to allow the panel to monitor the uptime of the raspberry pi and communicate alarms.
 

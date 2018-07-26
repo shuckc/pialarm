@@ -28,12 +28,14 @@ Now install the contents of this repository to `~/pialarm` as follows:
 	$ sudo apt-get install git
     $ git clone https://github.com/shuckc/pialarm.git
 
-### Wiring
-First I used a couple of FTDI USB external COM ports (5V tolerant) as a proof of concept. However it is much neater to omit these and use the GPIO pins on the pi directly. The COM ports on the alarm mainboard all drive `Tx` to 5V logic levels, with a series protection resistor of ~9.1kOhm, which needs to be accounted for in the voltage divider to reduce to 3.3V logic for the raspberry pi GPIO pins. Since the protection resistor is quite large, I used this as the top resister in the divider chain, with a bottom resistor of 15kOhm. For Rpi -> Pannel, I drove the panel's Rx pin directory with no problems.
+You may also update the Pi kernel and firmware with `$ sudo rpi-update` - didn't cause any problems for me.
 
-For more details see `/hardware`.
+### Wiring
+First I used a couple of FTDI USB external COM ports (5V tolerant) as a proof of concept. However it is much neater to omit these and use the GPIO pins on the pi directly. The COM ports on the alarm mainboard all drive `Tx` to 5V logic levels, with a series protection resistor of 9.1kOhm, which needs to be accounted for in the voltage divider to reduce to 3.3V logic for the raspberry pi GPIO pins. Since the protection resistor is quite large, I used this as the top resister in the divider chain, with a bottom resistor of 15kOhm. For Rpi -> Pannel, I drove the panel's Rx pin directory with no problems.
+
+For more details see [hardware](hardware/).
 
 ### Legal
-The protocols were reversed engineered using a Salae Logic8 logic probe, and later by capturing traffic using the `ser2net` tool. See the `traces` directory for these. No author or contributor has signed the Texecom NDA agreement.
+The protocols were reversed engineered using a Salae Logic8 logic probe, and later by capturing traffic using the `ser2net` tool. See the [traces](traces/) directory for these. No author or contributor has signed the Texecom NDA agreement.
 
 

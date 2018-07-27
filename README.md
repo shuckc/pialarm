@@ -1,6 +1,6 @@
 
 # pialarm
-Have a Texecom Premier alarm panel? This repository contains scripts and a webserver to speak to the panel over the UART serial ports, ideally from a raspberry pi computer within the alarm panel itself, to provide remote monitoring and alarm escalation over the internet.
+Have a Texecom Premier alarm panel, and a Raspberry Pi? This repository contains scripts to speak to the panel over the UART serial ports, ideally by locating the Pi computer within the alarm panel, to provide remote monitoring and alarm escalation over the internet. To reach the wider world, panel log events are pushed to a Telegram chat group, and alarm triggers are pushed over the PSTN using Nexmo to send SMS messages and send text-to-speech messages.
 
 The project emultates some of the functionality of Wintex, the Texecom windows-based configuration system, and also uses parts of the Cestron protocol for real-time event monitoring. It will also speak the monitoring protocol to allow the panel to monitor the uptime of the raspberry pi and communicate alarms.
 
@@ -18,7 +18,7 @@ Configure via. the keypad as follows:
 ### Preparing the pi
 Install a blank `rasbian` install to an SD Card (ideally skipping NOOBS). Boot using a keyboard and screen, then use `sudo raspi-config` to enable ssh (`5 Interfacing Options` -> `P2 SSH` -> `Yes`) then change the password for the `pi` user using `passwd`.
 
-It is necessary to diable the serial `tty` that raspian attaches to `/dev/ttyACM0` in order to have this working. Instructions to do this can be found online, it is a simple matter of running `sudo raspi-config` and disabling the serial tty under `5 Interfacing Options` -> `P6 Serial` -> `No` -> `Yes` -> `OK`, giving this summary:
+It is necessary to disable the serial `tty` that raspian attaches to `/dev/ttyACM0` in order to access the hardware UART. With recent rasbian releases it is a simple matter of running `sudo raspi-config` and disabling the serial tty under `5 Interfacing Options` -> `P6 Serial` -> `No` -> `Yes` -> `OK`, giving this summary:
 
     The serial login shell is disabled
     The serial interface is enabled
@@ -38,4 +38,11 @@ For more details see [hardware](hardware/).
 ### Legal
 The protocols were reversed engineered using a Salae Logic8 logic probe, and later by capturing traffic using the `ser2net` tool. See the [traces](traces/) directory for these. No author or contributor has signed the Texecom NDA agreement.
 
+### See also
+
+* hMike Stirling's @mikestir  implementation of an [Alarm Receiving Centre ARC](ttps://github.com/mikestir/alarm-server ), expecting messages over TCP, so requires e.g. ComIP communicator module
+* @kieranmjones who first documented the [Cestron protocol](https://github.com/kieranmjones/homebridge-texecom/blob/master/index.js )
+* @stuartyio who runs the Selfmon site for Honeywell panels
+* Nexmo [text-to-speech](https://developer.nexmo.com/voice/voice-api/guides/text-to-speech) a very reliable and low cost way to send calls and SMS messages over IP
+* [Telegram bot API](https://core.telegram.org/bots/api) for sending events to a chat group that can be setup on mobile phones.
 

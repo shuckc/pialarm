@@ -40,7 +40,7 @@ The protocols were reversed engineered using a Salae Logic8 logic probe, and lat
 
 ### See also
 
-* hMike Stirling's @mikestir  implementation of an [Alarm Receiving Centre ARC](ttps://github.com/mikestir/alarm-server ), expecting messages over TCP, so requires e.g. ComIP communicator module
+* Mike Stirling's @mikestir  implementation of an [Alarm Receiving Centre ARC](https://github.com/mikestir/alarm-server ), expecting messages over TCP, so requires e.g. ComIP communicator module
 * @kieranmjones who first documented the [Cestron protocol](https://github.com/kieranmjones/homebridge-texecom/blob/master/index.js )
 * @stuartyio who runs the Selfmon site for Honeywell panels
 * Nexmo [text-to-speech](https://developer.nexmo.com/voice/voice-api/guides/text-to-speech) a very reliable and low cost way to send calls and SMS messages over IP

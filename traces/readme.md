@@ -1,10 +1,21 @@
 ## Protocol Traces
-Texecom simple protocol examples, from serial traces captured using logic analyser.
+Texecom protocol examples, from serial traces captured using logic analyser.
 You can open the log files using the Salae Logic software from https://www.saleae.com/downloads/
 
 ![Screenshot of logic traces](logic-screenshot.png)
 
-Put the COM port on the pannel into 'nothing connected' mode. Like this the pannel waits for incoming commands on any of the supported protocols. Simple Protocol inputs are wrapped in `\` and `/` characters, responses are terminated with `\r\n`.
+Put the COM port on the pannel into 'nothing connected' mode. Like this the pannel waits for incoming commands on any of the supported protocols.
+
+
+Later captures were done by using the built in logger mode of ser2net and pointing wintex at the ser2net port.,
+
+Simple Protocol - see below
+Wintex protocol - [see windex-protocol.md](wintex-protocol.md)
+Cestron protocol -
+
+## Simple Protocol
+
+Simple Protocol inputs are wrapped in `\` and `/` characters, responses are terminated with `\r\n`.
 
 Downloading alarm log data.
 

@@ -5,7 +5,8 @@
 I wasn't sure if the communications +12V pins were protected by the texecom polyfuses or montored
 for faults, so I've used the power supplies marked DC+/DC- adjacent to the battery connections since
 this is likely a very short PCB trace. There is a 7805CT 1A linear regulator on-board, but this is not
-suited to power the Pi
+suited to power the Pi. The Hobbywing UBEC is a reasonable low-cost DC-DC convertor, easily bought via. ebay such as https://www.ebay.co.uk/itm/Hobbywing-3A-UBEC-5V-6V-Switch-Mode-BEC-/221655594331
+
 
     Pannel                          Raspberry Pi
                 +------------+      GPIO Header P1

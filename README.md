@@ -4,13 +4,13 @@ Have a Texecom Premier alarm panel, and a Raspberry Pi? This repository contains
 
 The project emultates some of the functionality of Wintex, the Texecom windows-based configuration system, and also uses parts of the Cestron protocol for real-time event monitoring. It will also speak the monitoring protocol to allow the panel to monitor the uptime of the raspberry pi and communicate alarms.
 
-To interface a raspberry Pi to the alarm pannel requires only a couple of resistors, plus a 12-15V DC to 5V DC power adapter. in the hardware directory you will find a small shield fitting the GPIO header to do this, and instructions to connect it to the Texecom main board. It it not necessary to buy any IP-communicator or Com300 board to do this.
+To interface a raspberry Pi to the alarm pannel requires only a couple of resistors, plus a 12-15V DC to 5V DC power adapter. In the [hardware](hardware/) directory you will find a small shield fitting the Pi GPIO header to do this, and instructions to connect it to the Texecom main board. It it not necessary to buy any IP-communicator or Com300 board to do this.
 
 ### Panel configuration
 Configure via. the keypad as follows:
 
     COM1                        configure as 'Not connected'
-    COM2                        configure as 'Cestron'
+    COM2                        configure as 'Crestron System'
     COM2 Speed 19200 baud
     COM3                        configure as 'Communicator 300'
     UDL Password -> 12345678    set this in ~/.pialarm
@@ -27,6 +27,8 @@ Now install the contents of this repository to `~/pialarm` as follows:
 
 	$ sudo apt-get install git
     $ git clone https://github.com/shuckc/pialarm.git
+    $ pip3.6 install -r requirements.txt
+    $ python
 
 You may also update the Pi kernel and firmware with `$ sudo rpi-update` - didn't cause any problems for me.
 
@@ -41,7 +43,7 @@ The protocols were reversed engineered using a Salae Logic8 logic probe, and lat
 ### See also
 
 * Mike Stirling's @mikestir  implementation of an [Alarm Receiving Centre ARC](https://github.com/mikestir/alarm-server ), expecting messages over TCP, so requires e.g. ComIP communicator module
-* @kieranmjones who first documented the [Cestron protocol](https://github.com/kieranmjones/homebridge-texecom/blob/master/index.js )
+* @kieranmjones who first freely documented the [Cestron protocol](https://github.com/kieranmjones/homebridge-texecom/blob/master/index.js )
 * @stuartyio who runs the Selfmon site for Honeywell panels
 * Nexmo [text-to-speech](https://developer.nexmo.com/voice/voice-api/guides/text-to-speech) a very reliable and low cost way to send calls and SMS messages over IP
 * [Telegram bot API](https://core.telegram.org/bots/api) for sending events to a chat group that can be setup on mobile phones.

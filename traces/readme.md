@@ -9,9 +9,9 @@ Put the COM port on the pannel into 'nothing connected' mode. Like this the pann
 
 Later captures were done by using the built in logger mode of ser2net and pointing wintex at the ser2net port.,
 
-Simple Protocol - see below
-Wintex protocol - [see windex-protocol.md](wintex-protocol.md)
-Cestron protocol -
+* Simple Protocol - see below
+* Wintex protocol - see [wintex-protocol.md](wintex-protocol.md)
+* Cestron protocol -
 
 ## Simple Protocol
 

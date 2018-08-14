@@ -198,16 +198,20 @@ Following table summarised from `$ cat zones.trace | grep "tcp" | grep "07 4f" |
     0x000968   0x30 * 1    zones     ?
     0x0009c0   0x40 * 1    zones     ?
     0x000a00   0x40 * 2    zones     ?
+    0x000e50                         expander location text 2x16 bytes
+    0x001100                         system LCD messages
+    0x0011d0                         ?  24*4 byte values, repeats xx020300
+    0x001a30                         communicator SMS numbers
     0x001678   0x01 * 1    zones     ?  always 0x06
     0x00167e   0x01 * 1    zones     ?
+    0x001800                         part arm names
     0x001fca   0x07 * 1    rc        ? always 0x01 00 00 00 ff ff 2c
     0x001fd1   0x2d * 1    dt        serial number, then config?
     0x004000   0x40*3+0x08 users     usernames - 200 bytes: 25*8-byte
-    0x004190   0x4x+0x0b   users     user pin codes (1/2) - 25*3-bytes
+    0x004190   0x40+0x0b   users     user pin codes (1/2) - 25*3-bytes
     0x0042ee   0x32        users     user type 0x0300 engineer, 0x0100 master,...
     0x0043b6   0x19        users     user flags?
     0x0043e8   0x19.       users     user flags?
-    0x0009c0   0x40        users     user prox tags?
     0x0051ea   0x30 * 1    zones     ?
     0x005320   0x40+0x24   zones     100 bytes
     0x005400   0x40 * 12   zones     24*0x20 byte zone text
@@ -215,9 +219,9 @@ Following table summarised from `$ cat zones.trace | grep "tcp" | grep "07 4f" |
     0x005c55   0x02 * 1    zones     ? always 0x28 c0
     0x005d04   0x10 * 1    zones     Engineering Utils -> Unique ID
     0x005d1d   0x40 * 3    zones     ?
-    0x00630b   0x18 * 1    users     user pin codes (2/2) - 25 bytes
     0x005ddd   0x08 * 1    zones     ?
     0x005de5   0x04 * 1    zones     ?
+    0x00630b   0x18 * 1    users     user pin codes (2/2) - 25 bytes
     0x00649b   0x10 * 1    zones,all ?
 
 Looks like knowing which regions of the memory can be read is one issue, then decoding the resulting blob of bytes. Trace files are:

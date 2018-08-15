@@ -42,10 +42,12 @@ class SerialWintex():
 			else:
 				reply = self.parse_msg(self.buf[1:sz-1]) # parser does not need length or checksum
 				if reply:
-					reply.insert(0, len(reply)+2) # prepend size, len(msg)+chk+sz
-					checksum = self.checksum(reply)
-					reply.append(checksum)
-					yield reply
+					msg = []
+					msg.insert(0, len(reply)+2) # prepend size, len(msg)+chk+sz
+					msg.extend(reply)
+					checksum = self.checksum(msg)
+					msg.append(checksum)
+					yield msg
 				del self.buf[0:sz]
 		return
 	def checksum(self, msg):
@@ -188,11 +190,12 @@ class WintexMemDecoder():
 			'sms_centre1': self.get_ascii(self.mem, 0x001a30, 16),
 			'sms_centre2': self.get_ascii(self.mem, 0x001a40, 16),
 		}
-		js['keypad'] = {
+		js['virtualkeypad'] = {
 			'screen': self.get_ascii(self.io, 0x001196, 16),
 			'screen2': self.get_ascii(self.io, 0x0011A6, 16),
 			'leds': self.io[0x11B7],
 		}
+		js['keypads'] = self.decode_keypads()
 		return js
 
 	def decode_users(self):
@@ -217,10 +220,11 @@ class WintexMemDecoder():
 				'name': self.get_ascii(self.mem, 0x005400+i*32, 16),
 				'name2': self.get_ascii(self.mem, 0x005400+i*32+16, 16),
 				'type': self.mem[0+i],
-				'flags': self.mem[0x000030+i],
+				'chime': self.mem[0x000030+i], # 00 off, 01, 02, 03 chime type
 				'area': self.mem[0x000060+i],
 				'wiring': self.mem[0x000090+i],
-
+				'attrib1': self.mem[0x0000c0+i*2], # omittable bit 0
+				'attrib2': self.mem[0x0000c1+i*2], # double-kock bit 0
 			})
 		return zones
 
@@ -233,9 +237,36 @@ class WintexMemDecoder():
 		return areas
 	def decode_expanders(self):
 		expanders = []
+		# sounds is a bitmask, aux_input select byte value,
+		# net expander area   aux_input sounds speaker_vol
+		# 1   1        000f50 000f70    000f80 000f90
+		# 1   2.       000f52 000f71    000f81 000f91
 		for i in range(self.expanders):
 			expanders.append({
 				'location': self.get_ascii(self.mem, 0x000e50+i*16,16),
+				'area': self.mem[0x000f50+i*2],
+				'aux_input': self.mem[0x000f70+i],
+				'sounds': self.mem[0x000f80+i],
+				'speaker': self.mem[0x000f90+i],
+			})
+		return expanders
+
+	def decode_keypads(self):
+		expanders = []
+		# zones are literal bytes, volumne is displayed +1 in UI,
+		# area are usual bitmask, sounds and options are bitmasks,
+		# notes are in the GUI only.
+		# net, keypad, zone 1, zone 2, volume, area,   sounds,  options
+		#   1.    1.   000fc0, 000fc1, 001000, 000fa0, 001010,  000fe0
+		#   1     2.   000fc2, 000fc3, 001001, 000fa2, 001011,  000fe2
+		for i in range(self.keypads):
+			expanders.append({
+				'keypad_z1_zone': self.mem[0x000fc0+i*2],
+				'keypad_z2_zone': self.mem[0x000fc1+i*2],
+				'areas':   self.mem[0x000fa0+i*2],
+				'options': self.mem[0x000fe0+i*2],
+				'sounds':  self.mem[0x001010+i],
+				'volume':  self.mem[0x001000+i],
 			})
 		return expanders
 

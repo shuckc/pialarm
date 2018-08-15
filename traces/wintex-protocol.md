@@ -189,7 +189,7 @@ Following table summarised from `$ cat zones.trace | grep "tcp" | grep "07 4f" |
 
     offset     size*reads  trace     purpose
     0x000000   0x18 * 1    zones     24* byte, zone type
-    0x000030   0x18 * 1    zones     24* byte, not sure, all 0x00
+    0x000030   0x18 * 1    zones     24* byte, zone chime
     0x000060   0x18 * 1    zones     24* byte, zone area, bitmask ABCDEF...
     0x000090   0x18 * 1    zones     24* byte, zone wiring (perhaps)
     0x0000c0   0x30 * 1    zones     possible zone attributes?

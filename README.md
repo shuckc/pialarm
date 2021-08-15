@@ -27,6 +27,7 @@ Now install the contents of this repository to `~/pialarm` as follows:
 
 	$ sudo apt-get install git
     $ git clone https://github.com/shuckc/pialarm.git
+    $ cd pialarm
     $ pip3.6 install -r requirements.txt
     $ python
 

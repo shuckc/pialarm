@@ -1,12 +1,12 @@
 
 # pialarm
-This repository contains scripts to speak to the panel over the UART serial ports. The project emultates some of the functionality of Wintex, the Texecom windows-based configuration tool. 
+This repository contains scripts to speak to a Texecom alarm panel over the UART serial ports. The project emultates some of the functionality of Wintex, the Texecom windows-based configuration tool. 
 
 To interface a raspberry Pi to the alarm pannel requires only a couple of resistors, plus a 12-15V DC to 5V DC power adapter. In the [hardware](hardware/) directory you can see how to connect it to the Texecom main board. It it not necessary to buy any IP-communicator or Com300 board to do this.
 
 ### Protocol
 
-See captured examples and dissections of the ["simple" protocol](protocol/readme.md) and the [Wintext protocol](protocol/wintex-protocol.md).
+See captured examples and dissections of the ["simple" protocol](protocol/readme.md) and the [Wintex protocol](protocol/wintex-protocol.md).
 
 
 

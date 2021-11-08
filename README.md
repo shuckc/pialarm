@@ -1,12 +1,17 @@
 
 # pialarm
-Have a Texecom Premier alarm panel, and a Raspberry Pi? This repository contains scripts to speak to the panel over the UART serial ports, ideally by locating the Pi computer within the alarm panel, to provide remote monitoring and alarm escalation over the internet. To reach the wider world, panel log events are pushed to a Telegram chat group, and alarm triggers are pushed over the PSTN using Nexmo to send SMS messages and send text-to-speech messages.
+This repository contains scripts to speak to the panel over the UART serial ports. The project emultates some of the functionality of Wintex, the Texecom windows-based configuration tool. 
 
-The project emultates some of the functionality of Wintex, the Texecom windows-based configuration system, and also uses parts of the Cestron protocol for real-time event monitoring. It will also speak the monitoring protocol to allow the panel to monitor the uptime of the raspberry pi and communicate alarms.
+To interface a raspberry Pi to the alarm pannel requires only a couple of resistors, plus a 12-15V DC to 5V DC power adapter. In the [hardware](hardware/) directory you can see how to connect it to the Texecom main board. It it not necessary to buy any IP-communicator or Com300 board to do this.
 
-To interface a raspberry Pi to the alarm pannel requires only a couple of resistors, plus a 12-15V DC to 5V DC power adapter. In the [hardware](hardware/) directory you will find a small shield fitting the Pi GPIO header to do this, and instructions to connect it to the Texecom main board. It it not necessary to buy any IP-communicator or Com300 board to do this.
+### Protocol
+
+See captured examples and dissections of the ["simple" protocol](protocol/readme.md) and the [Wintext protocol](protocol/wintex-protocol.md).
+
+
 
 ### Panel configuration
+
 Configure via. the keypad as follows:
 
     COM1                        configure as 'Not connected'
@@ -14,6 +19,10 @@ Configure via. the keypad as follows:
     COM2 Speed 19200 baud
     COM3                        configure as 'Communicator 300'
     UDL Password -> 12345678    set this in ~/.pialarm
+
+
+
+
 
 ### Preparing the pi
 Install a blank `rasbian` install to an SD Card (ideally skipping NOOBS). Boot using a keyboard and screen, then use `sudo raspi-config` to enable ssh (`5 Interfacing Options` -> `P2 SSH` -> `Yes`) then change the password for the `pi` user using `passwd`.
@@ -33,13 +42,15 @@ Now install the contents of this repository to `~/pialarm` as follows:
 
 You may also update the Pi kernel and firmware with `$ sudo rpi-update` - didn't cause any problems for me.
 
+
+
 ### Wiring
 First I used a couple of FTDI USB external COM ports (5V tolerant) as a proof of concept. However it is much neater to omit these and use the GPIO pins on the pi directly. The COM ports on the alarm mainboard all drive `Tx` to 5V logic levels, with a series protection resistor of 9.1kOhm, which needs to be accounted for in the voltage divider to reduce to 3.3V logic for the raspberry pi GPIO pins. Since the protection resistor is quite large, I used this as the top resister in the divider chain, with a bottom resistor of 15kOhm. For Rpi -> Panel, I drove the panel's Rx pin directory with no problems.
 
 For more details see [hardware](hardware/).
 
 ### Legal
-This project is not affiliated with Texecom. The protocols were reversed engineered using a Salae Logic8 logic probe, and later by capturing traffic using the `ser2net` tool, and custom scripts to convert trace files to memory maps. See the [traces](traces/) directory for these. For the fine details, a panel was emulated with `udl-server.py` and WinTex used to change settings individually. No author or contributor has signed the Texecom NDA agreement.
+This project is not affiliated with Texecom. The protocols were reversed engineered using a Salae Logic8 logic probe, and later by capturing traffic using the `ser2net` tool, and custom scripts to convert trace files to memory maps. See the [protocol](protocol/) directory for these. For the fine details, a panel was emulated with `udl-server.py` and WinTex used to change settings individually. No author or contributor has signed the Texecom NDA agreement.
 
 If you use the configuration system to change panel settings, this is done at your own risk. It is not beyond the realm of possibility that a panel might need NVM reset to recover or the use of a firmware flasher.
 

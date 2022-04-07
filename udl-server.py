@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+
 import argparse
 import trio
 from itertools import count
@@ -5,6 +7,7 @@ from pialarm import SerialWintex, MemStore
 from functools import partial
 
 parser = argparse.ArgumentParser(formatter_class=argparse.ArgumentDefaultsHelpFormatter)
+parser.add_argument("--panel", help="Specify the panel to identify as", default='Elite 24    V4.02.01')
 parser.add_argument("--verbose", help="Print instructions", action='store_true', default=False)
 parser.add_argument("--debug", help="Print bytes on wire", action='store_true', default=False)
 parser.add_argument("--mem", help="write observed values to MEMFILE in position")
@@ -42,7 +45,10 @@ class SerialWintexPanel(SerialWintex):
             return self.prep('Z\x05\x01\x00\x07\x09\x04\x07\x01')
         elif mtype == 'Z':
             print('Sending panel identification')
-            return self.prep('ZElite 24    V4.02.01')
+            return self.prep('Z' + self.args.panel)
+        elif mtype == 'H':
+            print('Wintex hang up')
+            return [ 0x03, 0x06, 0xF6 ]
         # wintex shows 'Reading UDL options'
         elif mtype == 'O': # configuration read
             base, sz, wr_data, old_data = unpack_mem_proto(self.mem, body)

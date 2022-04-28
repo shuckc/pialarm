@@ -55,7 +55,7 @@ class SerialWintexPanel(SerialWintex):
         # wintex shows 'Reading UDL options'
         elif mtype == 'O': # configuration read
             base, sz, wr_data, old_data = unpack_mem_proto(self.mem, body)
-            print('Configuration read addr={:06x} sz={:01x}'.format(base, sz))
+            print('Configuration read addr={:06x} sz={:01x} data={}'.format(base, sz, ','.join(hex(x) for x in old_data)))
             return [ord('I')] + body[0:4] + list(old_data) # echo back addr and sz
         elif mtype == 'I': # configuration write
             base, sz, wr_data, old_data = unpack_mem_proto(self.mem, body)
@@ -64,7 +64,7 @@ class SerialWintexPanel(SerialWintex):
             return ACK_MSG
         elif mtype == 'R': # live state read
             base, sz, wr_data, old_data = unpack_mem_proto(self.io, body)
-            print('Live state read addr={:06x} sz={:01x} data={}'.format(base, sz, ', '.join(hex(x) for x in old_data)))
+            print('Live state read addr={:06x} sz={:01x} data={}'.format(base, sz, ','.join(hex(x) for x in old_data)))
             return [ord('W')] + body[0:4] + list(old_data)
         elif mtype == 'W': # live state write
             base, sz, wr_data, old_data = unpack_mem_proto(self.io, body)

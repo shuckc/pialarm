@@ -189,7 +189,7 @@ async def main():
 
             async def socket_handler(reader, writer):
                 await udl_server(mem, io, args, reader, writer)
-            panel_task = asyncio.create_task(serve_tcp(socket_handler, "*", 10001))
+            panel_task = asyncio.create_task(serve_tcp(socket_handler, "", PORT))
             try:
                 await interactive_shell(mem, io)
             finally:

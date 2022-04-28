@@ -1,21 +1,24 @@
 #!/usr/bin/env python
-
 import argparse
 import asyncio
 from itertools import count
 from pialarm import SerialWintex, MemStore
 from functools import partial
+import os
 
 from prompt_toolkit.patch_stdout import patch_stdout
 from prompt_toolkit.shortcuts import PromptSession
+
+PORT = 10001
+MEMFILE = os.path.expanduser(os.path.join("~", "alarmpanel.cfg"))
 
 parser = argparse.ArgumentParser(formatter_class=argparse.ArgumentDefaultsHelpFormatter)
 parser.add_argument("--panel", help="Specify the panel to identify as\nUse 'Premier 832 V4.0' for an 832", default='Elite 24    V4.02.01')
 parser.add_argument("--verbose", help="Print instructions", action='store_true', default=False)
 parser.add_argument("--debug", help="Print bytes on wire", action='store_true', default=False)
-parser.add_argument("--mem", help="write observed values to MEMFILE in position")
+parser.add_argument("--mem", help="write observed values to MEMFILE in position", default=MEMFILE)
+parser.add_argument("--udl-port", help="UDL port", default=PORT, type=int)
 
-PORT = 10001
 # How much memory to spend (at most) on each call to recv. Pretty arbitrary,
 # but shouldn't be too big or too small.
 BUFSIZE = 16384
@@ -148,22 +151,6 @@ async def udl_server(mem, io, args, reader, writer):
         print("udl_server {}: crashed: {!r}".format(ident, exc))
         raise
 
-async def handle_wintex(reader, writer):
-    pass
-
-async def serve_tcp(handler, address="127.0.0.1", port=10001):
-    server = await asyncio.start_server(
-        handler, address, port)
-
-    addrs = ', '.join(str(sock.getsockname()) for sock in server.sockets)
-    print(f'Serving on {addrs}')
-
-    try:
-        async with server:
-            await server.serve_forever()
-    except asyncio.exceptions.CancelledError:
-        pass
-
 async def interactive_shell(mem, io):
     """
     Provides a simple repl that allows interactive
@@ -176,7 +163,7 @@ async def interactive_shell(mem, io):
     while True:
         try:
             input = await session.prompt_async()
-            exec(input)
+            exec(input, {'mem': mem, 'io': io})
         except (EOFError, KeyboardInterrupt):
             return
         except Exception as ex:
@@ -188,9 +175,10 @@ async def main():
     with patch_stdout():
         with MemStore(args.mem, size=0x8000, file_offset=0x0) as mem, MemStore(args.mem, size=0x4000, file_offset=0x8000) as io:
 
-            async def socket_handler(reader, writer):
-                await udl_server(mem, io, args, reader, writer)
-            panel_task = asyncio.create_task(serve_tcp(socket_handler, "", PORT))
+            server = await asyncio.start_server(partial(udl_server, mem, io, args), None, args.udl_port)
+            addrs = ', '.join(str(sock.getsockname()) for sock in server.sockets)
+            print(f'Serving on {addrs}')
+
             try:
                 await interactive_shell(mem, io)
             finally:

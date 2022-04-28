@@ -1,4 +1,5 @@
 import argparse
+from collections.abc import Iterable
 import sys
 import array
 import json
@@ -99,7 +100,10 @@ class MemStore():
 	def __setitem__(self, key, value):
 		#if key > self.size:
 		#	raise IndexError('position {:x} is beyond size={:x}'.format(key, self.size))
-		self.backing_array[key:key+len(value)] = array.array('B', value)
+		if isinstance(value, Iterable):
+			self.backing_array[key:key+len(value)] = array.array('B', value)
+		else:
+			self.backing_array[key] = value
 
 
 class WintexMemDecoder():

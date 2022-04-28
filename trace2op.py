@@ -26,15 +26,19 @@ class SerialWintexRecord(SerialWintex):
 		if c:
 			base = (body[0] << 16) + (body[1] << 8) + body[2]
 			sz = body[3]
+			payload = body[4:]
 			if sz + 4 != len(body):
 				raise Exception("IO length byte does not match msg payload sz")
-			c[base] = body[4:]
+			c[base] = payload
+			print(f'storing msg {mtype} payload={payload} to {base:02x}')
+		else:
+			print(f'ignoring msg {self.direction}/{mtype} {body}')
 		return None
 
 if __name__ == '__main__':
 	args = parser.parse_args()
 
-	stream = sys.stdin if args.trace == '-' else open(args.trace)
+	stream = sys.stdin if args.trace == '-' else open(args.trace, 'r')
 
 	with MemStore(args.mem, size=0x8000, file_offset=0x0) as wr_mem, MemStore(args.mem, size=0x4000, file_offset=0x8000) as wr_io:
 
@@ -45,12 +49,13 @@ if __name__ == '__main__':
 			direction = line[20:25].strip()
 			if direction not in buffers:
 				continue
-			hexbytes = line[25:50].strip()
+			hexbytes = line[25:50].strip().split(' ')
 			if args.debug:
-				print("in: {}' '{}' {}".format(datetime, direction, hexbytes.split(' ')))
+				print("in: {}' '{}' {}".format(datetime, direction, hexbytes))
 			#decode bytes from hexbytes and push to buffer
 			buf = buffers[direction]
-			buf.on_bytes([int(x,16) for x in hexbytes.split(' ')], datetime)
+			for reply in buf.on_bytes([int(x,16) for x in hexbytes], datetime):
+				pass
 
 		if args.json:
 			dec = WintexMemDecoder(wr_mem, wr_io)

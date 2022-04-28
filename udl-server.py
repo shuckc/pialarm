@@ -47,7 +47,7 @@ class SerialWintexPanel(SerialWintex):
             print('Sending login prompt')
             return self.prep('Z\x05\x01\x00\x07\x09\x04\x07\x01')
         elif mtype == 'Z':
-            print('Sending panel identification')
+            print(f'Recieved UDL login {body}. Sending panel identification')
             return self.prep('Z' + self.args.panel)
         elif mtype == 'H':
             print('Wintex hang up')
@@ -105,7 +105,8 @@ class SerialWintexPanel(SerialWintex):
                 print('RTC initialise special op 2')
                 return ACK_MSG
             else:
-                raise Exception('Unknown B special action {} with args {!r}'.format(mtype, body))
+                print('Unknown B special RTC action {} with args {!r}'.format(mtype, body))
+                return ACK_MSG
         else:
             print('Unknown command {} with args {!r}'.format(mtype, body))
 

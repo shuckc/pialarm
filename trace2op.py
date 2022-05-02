@@ -2,6 +2,7 @@ import argparse
 import sys
 import array
 import json
+import os
 from collections.abc import Iterable
 
 from pialarm import SerialWintex, MemStore, WintexMemDecoder
@@ -11,12 +12,14 @@ from pialarm import SerialWintex, MemStore, WintexMemDecoder
 # verifies serial checksums in the trace
 # e.g. $ cat traces/wintex-ser2net/*.trace | python3.6 trace2op.py --mem blob.mem
 
+MEMFILE = os.path.expanduser(os.path.join("~", "alarmpanel.cfg"))
+
 parser = argparse.ArgumentParser(formatter_class=argparse.ArgumentDefaultsHelpFormatter)
 parser.add_argument("--verbose", help="Print instructions", action='store_true', default=False)
 parser.add_argument("--debug", help="Print bytes on wire", action='store_true', default=False)
-parser.add_argument("--trace", help="Read from file", default='-')
-parser.add_argument("--mem", help="write observed values to MEMFILE in position")
+parser.add_argument("--mem", help="write observed values to MEMFILE in position", default=MEMFILE)
 parser.add_argument("--json", help="dump json extracted data", default=False, action='store_true')
+parser.add_argument("trace", help="Read from ser2net trace files", default='-')
 
 class SerialWintexRecord(SerialWintex):
 	def handle_msg(self, mtype, body):

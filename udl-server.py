@@ -18,6 +18,7 @@ parser.add_argument("--verbose", help="Print instructions", action='store_true',
 parser.add_argument("--debug", help="Print bytes on wire", action='store_true', default=False)
 parser.add_argument("--mem", help="write observed values to MEMFILE in position", default=MEMFILE)
 parser.add_argument("--udl-port", help="UDL port", default=PORT, type=int)
+parser.add_argument("--udl-password", help="UDL password", default="1234")
 
 # How much memory to spend (at most) on each call to recv. Pretty arbitrary,
 # but shouldn't be too big or too small.
@@ -127,7 +128,7 @@ async def udl_server(mem, io, args, reader, writer):
     # to understand when there are multiple simultaneous connections.
     ser = SerialWintexPanel(args, 'tcp', mem=mem, io=io)
     ident = next(CONNECTION_COUNTER)
-    print("udl_server {}: started".format(ident))
+    print("udl_server {}: connected".format(ident))
     try:
         while True:
             data = await reader.read(BUFSIZE)
@@ -172,6 +173,7 @@ async def interactive_shell(mem, io):
 async def main():
     args = parser.parse_args()
 
+    print(f"Panel type '{args.panel}' with UDL password {args.udl_password} backed by file {args.mem}")
     with patch_stdout():
         with MemStore(args.mem, size=0x8000, file_offset=0x0) as mem, MemStore(args.mem, size=0x4000, file_offset=0x8000) as io:
 

@@ -1,9 +1,7 @@
 import argparse
 import sys
-import array
 import json
 import os
-from collections.abc import Iterable
 
 from pialarm import SerialWintex, MemStore, WintexMemDecoder
 

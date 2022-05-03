@@ -1,8 +1,5 @@
-import argparse
 from collections.abc import Iterable
-import sys
 import array
-import json
 
 
 def printable(c, alt=None):  # c should be int 0..255
@@ -81,15 +78,15 @@ class MemStore:
         self.size = size
         self.backing_array = array.array("B", [0] * size)
         try:
-            if filename == None:
+            if filename is None:
                 raise RuntimeError("not backed by file")
             self.backing_file = open(filename, mode="rb+")
             self.backing_file.seek(file_offset)
             self.backing_array = array.array("B", [])
             self.backing_array.fromfile(self.backing_file, size)
-        except FileNotFoundError as e:
+        except FileNotFoundError:
             self.backing_file = open(filename, mode="wb+")
-        except EOFError as e:
+        except EOFError:
             # file on disk too small, we've also effectively truncated backing_array, oops
             self.backing_array = array.array("B", [0] * size)
         except Exception as e:

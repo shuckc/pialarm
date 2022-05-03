@@ -24,9 +24,7 @@ parser.add_argument(
 parser.add_argument(
     "--debug", help="Print bytes on wire", action="store_true", default=False
 )
-parser.add_argument(
-    "--mem", help="write observed values to MEMFILE in position", default=MEMFILE
-)
+parser.add_argument("--mem", help="write panel config to MEMFILE", default=MEMFILE)
 parser.add_argument("--udl-port", help="UDL port", default=PORT, type=int)
 parser.add_argument("--udl-password", help="UDL password", default="1234")
 
@@ -192,7 +190,7 @@ async def udl_server(mem, io, args, reader, writer):
         raise
 
 
-async def interactive_shell(mem, io):
+async def interactive_shell(mem, io, args):
     """
     Provides a simple repl that allows interactive
     modification of the panel memory.
@@ -204,7 +202,7 @@ async def interactive_shell(mem, io):
     while True:
         try:
             input = await session.prompt_async()
-            exec(input, {"mem": mem, "io": io})
+            exec(input, {"mem": mem, "io": io, "args": args})
         except (EOFError, KeyboardInterrupt):
             return
         except Exception as ex:
@@ -229,9 +227,9 @@ async def main():
             print(f"Serving UDL on {addrs}")
 
             try:
-                await interactive_shell(mem, io)
-            except Exception:
-                pass
+                await interactive_shell(mem, io, args)
+            except Exception as e:
+                print(e)
             print("Quitting event loop. Bye.")
 
 

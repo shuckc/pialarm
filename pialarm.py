@@ -22,16 +22,14 @@ class SerialWintex:
     def on_bytes(self, bytes_message, context=None):
         self.buf.extend(bytes_message)
         if self.args.debug:
-            print(" buffer: {:4s} {}".format(self.direction, self.buf))
+            print(f" buffer: {self.direction:4s} {self.buf}")
         # have we a full message in this direction
         while len(self.buf) > 0 and len(self.buf) >= self.buf[0]:
             sz = self.buf[0]
             chk = self.checksum(self.buf[0:sz])
             if chk != 0:
                 print(
-                    "Warning: bad checksum for {} at {} -> {}, emptying buffer".format(
-                        self.direction, context, self.buf, chk
-                    )
+                    f"Warning: bad checksum for {self.direction} at {context} -> {self.buf}, emptying buffer"
                 )
                 del self.buf[:]
             else:
@@ -61,11 +59,7 @@ class SerialWintex:
         msg_hex = " ".join("{:02x}".format(m) for m in msg[1:])
         msg_ascii = "".join(printable(c, alt=".") for c in msg[1:])
         if self.args.verbose:
-            print(
-                "  {:4s} {} {} | {} ".format(
-                    direction, printable_type, msg_hex, msg_ascii
-                )
-            )
+            print(f"  {direction:4s} {printable_type} {msg_hex} | {msg_ascii} ")
 
     def parse_msg(self, msg):
         self.log_msg("<", msg)
@@ -107,9 +101,7 @@ class MemStore:
     def __exit__(self, type, value, traceback):
         if self.backing_file:
             print(
-                "Writing 0x{:x} bytes to offet 0x{:x} within {}".format(
-                    self.size, self.file_offset, self.backing_file
-                )
+                f"Writing 0x{self.size:x} bytes to offet 0x{self.file_offset:x} within {self.backing_file}"
             )
             self.backing_file.seek(self.file_offset)
             self.backing_array.tofile(self.backing_file)

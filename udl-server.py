@@ -66,13 +66,15 @@ def unpack_mem_proto(region, msg_body):
     sz = msg_body[3]
     if not len(msg_body) in [4, sz + 4]:
         raise Exception(
-            "config read/write length {} vs. data payload {} mismatch".format(
-                sz, len(msg_body)
-            )
+            f"config read/write len {sz} vs. data payload {len(msg_body)} mismatch"
         )
     old_data = region[base : base + sz]
     wr_data = msg_body[4:]
     return (base, sz, wr_data, old_data)
+
+
+def hexbytes(data):
+    return ",".join(hex(x) for x in data)
 
 
 class SerialWintexPanel(SerialWintex):
@@ -92,9 +94,7 @@ class SerialWintexPanel(SerialWintex):
         elif mtype == "O":  # configuration read
             base, sz, wr_data, old_data = unpack_mem_proto(self.mem, body)
             print(
-                "Configuration read addr={:06x} sz={:01x} data={}".format(
-                    base, sz, ",".join(hex(x) for x in old_data)
-                )
+                f"Configuration read addr={base:06x} sz={sz:01x} data={hexbytes(old_data)}"
             )
             return [ord("I")] + body[0:4] + list(old_data)  # echo back addr and sz
         elif mtype == "I":  # configuration write
@@ -105,25 +105,19 @@ class SerialWintexPanel(SerialWintex):
         elif mtype == "R":  # live state read
             base, sz, wr_data, old_data = unpack_mem_proto(self.io, body)
             print(
-                "Live state read addr={:06x} sz={:01x} data={}".format(
-                    base, sz, ",".join(hex(x) for x in old_data)
-                )
+                f"Live state read addr={base:06x} sz={sz:01x} data={hexbytes(old_data)}"
             )
             return [ord("W")] + body[0:4] + list(old_data)
         elif mtype == "W":  # live state write
             base, sz, wr_data, old_data = unpack_mem_proto(self.io, body)
-            print("Live state write addr={:06x} sz={:01x}".format(base, sz))
+            print(f"Live state write addr={base:06x} sz={sz:01x}")
             self.print_deltas(base, old_data, wr_data)
             self.io[base] = wr_data
             return ACK_MSG
         elif mtype == "P":  # Heartbeat
             return [ord("P"), 255, 255]
         elif mtype == "K":  # Keypad press
-            print(
-                "Keypad {} pressed 0x{:02x} - {}".format(
-                    body[0], body[1], KEY_MAP.get(body[1])
-                )
-            )
+            print(f"Keypad {body[0]} pressed 0x{body[1]:02x} - {KEY_MAP.get(body[1])}")
             return ACK_MSG
         elif mtype == "U":  # Special action?
             # U 01 - commit zone, expander changes
@@ -134,15 +128,15 @@ class SerialWintexPanel(SerialWintex):
                 print("Sending message to keypads")
                 return ACK_MSG
             else:
-                print("Unknown U special action {} with args {!r}".format(mtype, body))
+                print(f"Unknown U special action {mtype} with args {body!r}")
         elif mtype == "A":
-            print("Arming area {}".format(body[0]))
+            print(f"Arming area {body[0]}")
             return ACK_MSG
         elif mtype == "C":
-            print("Resetting area {}".format(body[0]))
+            print(f"Resetting area {body[0]}")
             return ACK_MSG
         elif mtype == "S":
-            print("Part arming area {} type={}".format(body[0], body[1]))
+            print(f"Part arming area {body[0]} type={body[1]}")
             return ACK_MSG
         elif mtype == "B":
             # RTC programming done via. B with args [56, 9, 29, 1, 0]
@@ -153,22 +147,16 @@ class SerialWintexPanel(SerialWintex):
                 print("RTC initialise special op 2")
                 return ACK_MSG
             else:
-                print(
-                    "Unknown B special RTC action {} with args {!r}".format(mtype, body)
-                )
+                print(f"Unknown B special RTC action {mtype} with args {body!r}")
                 return ACK_MSG
         else:
-            print("Unknown command {} with args {!r}".format(mtype, body))
+            print(f"Unknown command {mtype} with args {body!r}")
 
     def print_deltas(self, base, old, new):
         if old != new:
             for n, (i, j) in enumerate(zip(old, new)):
                 if i != j:
-                    print(
-                        "  mem: updated {:06x} old={:02x} new={:02x}".format(
-                            base + n, i, j
-                        )
-                    )
+                    print(f"  mem: updated {base+n:06x} old={i:02x} new={j:02x}")
 
     def prep(self, msg):
         return [ord(x) for x in msg]
@@ -179,28 +167,28 @@ async def udl_server(mem, io, args, reader, writer):
     # to understand when there are multiple simultaneous connections.
     ser = SerialWintexPanel(args, "tcp", mem=mem, io=io)
     ident = next(CONNECTION_COUNTER)
-    print("udl_server {}: connected".format(ident))
+    print(f"udl_server {ident}: connected")
     try:
         while True:
             data = await reader.read(BUFSIZE)
             if args.debug:
-                print("udl_server {}: received data {!r}".format(ident, data))
+                print(f"udl_server {ident}: received data {data!r}")
 
             if not data:
-                print("udl_server {}: connection closed".format(ident))
+                print(f"udl_server {ident}: connection closed")
                 return
 
             for reply in ser.on_bytes(data):
                 reply = bytes(reply)
                 if args.debug:
-                    print(" udl_server {}: sending {}".format(ident, reply))
+                    print(f" udl_server {ident}: sending {reply}")
                 writer.write(reply)
 
     except Exception as exc:
         # Unhandled exceptions will propagate into our parent and take
         # down the whole program. If the exception is KeyboardInterrupt,
         # that's what we want, but otherwise maybe not...
-        print("udl_server {}: crashed: {!r}".format(ident, exc))
+        print(f"udl_server {ident}: crashed: {exc!r}")
         raise
 
 
@@ -238,12 +226,12 @@ async def main():
                 partial(udl_server, mem, io, args), None, args.udl_port
             )
             addrs = ", ".join(str(sock.getsockname()) for sock in server.sockets)
-            print(f"Serving on {addrs}")
+            print(f"Serving UDL on {addrs}")
 
             try:
                 await interactive_shell(mem, io)
-            finally:
-                panel_task.cancel()
+            except Exception:
+                pass
             print("Quitting event loop. Bye.")
 
 

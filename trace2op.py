@@ -71,7 +71,7 @@ if __name__ == "__main__":
                 continue
             hexbytes = line[25:50].strip().split(" ")
             if args.debug:
-                print("in: {}' '{}' {}".format(datetime, direction, hexbytes))
+                print(f"in: {datetime}' '{direction}' {hexbytes}")
             # decode bytes from hexbytes and push to buffer
             buf = buffers[direction]
             for reply in buf.on_bytes([int(x, 16) for x in hexbytes], datetime):

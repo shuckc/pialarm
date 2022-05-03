@@ -1,2 +1,6 @@
-asciimatics
-prompt_toolkit
+asciimatics==1.14.0
+future==0.18.2
+Pillow==9.1.0
+prompt-toolkit==3.0.29
+pyfiglet==0.8.post1
+wcwidth==0.2.5

@@ -101,4 +101,5 @@ If you use the configuration system to change panel settings, this is done at yo
 * [Telegram bot API](https://core.telegram.org/bots/api) for sending events to a chat group that can be setup on mobile phones.
 * Gw0udm's [blog](https://gw0udm.wordpress.com/category/texecom/) which details serial port connectivity information as well as COM3 and various communicator systems.
 * [Leo Crawford's brute forcing](https://www.leocrawford.org.uk/2019/01/10/brute-forcing-my-own-texecom-premier-elite.html) of the UDL login.
-
+* RoganDawes' [ESPHome_Wintex](https://github.com/RoganDawes/ESPHome_Wintex) which can bridge Zone status to Home Assistant.
+* RoganDawes' [Java WintexProtocol](https://github.com/RoganDawes/WintexProtocol) decoder

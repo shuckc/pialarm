@@ -1,0 +1,52 @@
+<h1>Hello<h1>
+
+Panel data as <a href="/json">json</a> or <a href="/rich">html</a>
+
+<h3>Zones</h3>
+<table>
+<thead>
+<tr>
+<td>#</td>
+<td>Name</td>
+<td>Type</td>
+<td>Chime</td>
+<td>Area</td>
+<td>Wiring</td>
+<td>Attributes</td>
+</tr>
+</thead>
+{% for zone in panel.zones %}
+<tr>
+<td>{{loop.index}}</td>
+<td>{{zone.name}}</td>
+<td>{{zone.type}}</td>
+<td>{{zone.chime}}</td>
+<td>{{zone.area}}</td>
+<td>{{zone.wiring}}</td>
+<td>{{zone.attrib1}} {{zone.attrib2}}</td>
+</tr>
+{% endfor %}
+</table>
+
+<h3>Users</h3>
+<table>
+<thead>
+<tr>
+<td>#</td>
+<td>Name</td>
+<td>Pin code</td>
+<td>Access Areas</td>
+<td>Flags</td>
+</tr>
+</thead>
+{% for user in panel.users %}
+<tr>
+<td>{{loop.index}}</td>
+<td>{{user.name}}</td>
+<td>{{user.pincode}}</td>
+<td>{{user.access_areas}}</td>
+<td>{{user.flags0}} {{user.flags1}}</td>
+</tr>
+{% endfor %}
+</table>
+

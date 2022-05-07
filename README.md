@@ -16,7 +16,8 @@ This repository contains scripts to speak to (and impersonate) a Texecom alarm p
 
         $ python udl-server.py
         Panel type 'Elite 24    V4.02.01' with UDL password 1234 backed by file /home/chris/alarmpanel.cfg
-        Serving on ('::', 10001, 0, 0), ('0.0.0.0', 10001)
+        Serving UDL on ('::', 10001, 0, 0), ('0.0.0.0', 10001)
+        Serving web interface on 10002
         (eval) >
 
 4. In wintex hit `Connect` -> `Connect via. Network (127.0.0.1 on Port 10001)`. Wintex will prompt to reset the fake pannel. You will see some output like:
@@ -31,6 +32,9 @@ This repository contains scripts to speak to (and impersonate) a Texecom alarm p
         Configuration read addr=00167e sz=1 data=0x0
         Configuration read addr=005c55 sz=2 data=0x0,0x0
         (eval) >
+
+5. Open up a web browser to `http://localhost:10002` to see the decoded panel configuration
+
 
 
 ## Serial connection

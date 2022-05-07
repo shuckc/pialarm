@@ -2,7 +2,8 @@
 import argparse
 import asyncio
 from itertools import count
-from pialarm import SerialWintex, MemStore
+from pialarm import SerialWintex, MemStore, WintexMemDecoder
+import webpanel
 from functools import partial
 import os
 
@@ -10,6 +11,7 @@ from prompt_toolkit.patch_stdout import patch_stdout
 from prompt_toolkit.shortcuts import PromptSession
 
 PORT = 10001
+WEBPORT = 10002
 MEMFILE = os.path.expanduser(os.path.join("~", "alarmpanel.cfg"))
 
 parser = argparse.ArgumentParser(formatter_class=argparse.ArgumentDefaultsHelpFormatter)
@@ -27,6 +29,7 @@ parser.add_argument(
 parser.add_argument("--mem", help="write panel config to MEMFILE", default=MEMFILE)
 parser.add_argument("--udl-port", help="UDL port", default=PORT, type=int)
 parser.add_argument("--udl-password", help="UDL password", default="1234")
+parser.add_argument("--web-port", help="web port", default=WEBPORT, type=int)
 
 # How much memory to spend (at most) on each call to recv. Pretty arbitrary,
 # but shouldn't be too big or too small.
@@ -215,16 +218,21 @@ async def main():
     print(
         f"Panel type '{args.panel}' with UDL password {args.udl_password} backed by file {args.mem}"
     )
+
     with patch_stdout():
         with MemStore(args.mem, size=0x8000, file_offset=0x0) as mem, MemStore(
             args.mem, size=0x4000, file_offset=0x8000
         ) as io:
 
+            panel = WintexMemDecoder(mem, io)
             server = await asyncio.start_server(
                 partial(udl_server, mem, io, args), None, args.udl_port
             )
             addrs = ", ".join(str(sock.getsockname()) for sock in server.sockets)
             print(f"Serving UDL on {addrs}")
+
+            if args.web_port > 0:
+                await webpanel.start_server(mem, io, args, panel)
 
             try:
                 await interactive_shell(mem, io, args)

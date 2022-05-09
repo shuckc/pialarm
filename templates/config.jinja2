@@ -1,0 +1,136 @@
+<h1>Hello<h1>
+
+Panel data as <a href="/json">json</a> or <a href="/rich">html</a>
+
+<h3>Zones</h3>
+<table>
+  <thead>
+    <tr>
+      <td>#</td>
+      <td>Name</td>
+      <td>Type</td>
+      <td>Chime</td>
+      <td>Area</td>
+      <td>Wiring</td>
+      <td>Attributes</td>
+    </tr>
+  </thead>
+{% for zone in panel.zones %}
+  <tr>
+    <td>{{loop.index}}</td>
+    <td>{{zone.name}} {{zone.name2}}</td>
+    <td>{{zone.type}}</td>
+    <td>{{zone.chime}}</td>
+    <td>{{zone.area}}</td>
+    <td>{{zone.wiring}}</td>
+    <td>{{zone.attrib1}} {{zone.attrib2}}</td>
+  </tr>
+{% endfor %}
+</table>
+
+<h3>Users</h3>
+<table>
+  <thead>
+    <tr>
+      <td>#</td>
+      <td>Name</td>
+      <td>Pin code</td>
+      <td>Access Areas</td>
+      <td>Flags</td>
+    </tr>
+  </thead>
+{% for user in panel.users %}
+  <tr>
+    <td>{{loop.index}}</td>
+    <td>{{user.name}}</td>
+    <td>{{user.pincode}}</td>
+    <td>{{user.access_areas}}</td>
+    <td>{{user.flags0}} {{user.flags1}}</td>
+  </tr>
+{% endfor %}
+</table>
+
+
+<h3>Areas</h3>
+<table>
+  <thead>
+    <tr>
+      <td>#</td>
+      <td>Name</td>
+    </tr>
+  </thead>
+{% for area in panel.areas %}
+  <tr>
+    <td>{{loop.index}}</td>
+    <td>{{area.text}}</td>
+  </tr>
+{% endfor %}
+</table>
+
+
+<h3>Keypads</h3>
+<table>
+  <thead>
+    <tr>
+      <td>#</td>
+      <td>KP Zone 1</td>
+      <td>KP Zone 2</td>
+      <td>Areas</td>
+      <td>Options</td>
+      <td>Sounds</td>
+      <td>Volume</td>
+    </tr>
+  </thead>
+{% for keypad in panel.keypads %}
+  <tr>
+    <td>{{loop.index}}</td>
+    <td>{{keypad.keypad_z1_zone}}</td>
+    <td>{{keypad.keypad_z2_zone}}</td>
+    <td>{{keypad.areas}}</td>
+    <td>{{keypad.options}}</td>
+    <td>{{keypad.sounds}}</td>
+    <td>{{keypad.volume}}</td>
+  </tr>
+{% endfor %}
+</table>
+
+<h3>Expanders</h3>
+<table>
+  <thead>
+    <tr>
+      <td>#</td>
+      <td>Location Text</td>
+      <td>Area</td>
+      <td>Aux Input</td>
+      <td>Sounds</td>
+      <td>Speaker</td>
+    </tr>
+  </thead>
+{% for expander in panel.expanders %}
+  <tr>
+    <td>{{loop.index}}</td>
+    <td>{{expander.keypad_z1_zone}}</td>
+    <td>{{expander.keypad_z2_zone}}</td>
+    <td>{{expander.areas}}</td>
+    <td>{{expander.options}}</td>
+    <td>{{expander.sounds}}</td>
+  </tr>
+{% endfor %}
+</table>
+
+<h3>Outputs</h3>
+<table>
+  <thead>
+    <tr>
+      <td>#</td>
+      <td>Text</td>
+    </tr>
+  </thead>
+{% for output in panel.outputs %}
+  <tr>
+    <td>{{loop.index}}</td>
+    <td>{{output.text}}</td>
+  </tr>
+{% endfor %}
+</table>
+

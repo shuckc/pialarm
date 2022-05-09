@@ -1,9 +1,20 @@
-<h1>Hello<h1>
+{% extends "template.jinja2" %}
+{% block content %}
 
-Panel data as <a href="/json">json</a> or <a href="/rich">html</a>
+<h3 id="settings">Settings</h3>
 
-<h3>Zones</h3>
-<table>
+<ul>
+<li>Panel: {{app.args.panel}}</li>
+<li>verbose: {{app.args.verbose}}</li>
+<li>debug: {{app.args.debug}}</li>
+<li>mem: {{app.args.mem}}</li>
+<li>udl_port: {{app.args.udl_port}}</li>
+<li>udl_password: {{app.args.udl_password}}</li>
+<li>web_port: {{app.args.web_port}}</li>
+</ul>
+
+<h3 id="zones">Zones</h3>
+<table class="table table-striped">
   <thead>
     <tr>
       <td>#</td>
@@ -28,8 +39,8 @@ Panel data as <a href="/json">json</a> or <a href="/rich">html</a>
 {% endfor %}
 </table>
 
-<h3>Users</h3>
-<table>
+<h3 id="users">Users</h3>
+<table class="table table-striped">
   <thead>
     <tr>
       <td>#</td>
@@ -51,8 +62,8 @@ Panel data as <a href="/json">json</a> or <a href="/rich">html</a>
 </table>
 
 
-<h3>Areas</h3>
-<table>
+<h3 id="areas">Areas</h3>
+<table class="table table-striped">
   <thead>
     <tr>
       <td>#</td>
@@ -68,8 +79,8 @@ Panel data as <a href="/json">json</a> or <a href="/rich">html</a>
 </table>
 
 
-<h3>Keypads</h3>
-<table>
+<h3 id="keypads">Keypads</h3>
+<table class="table table-striped">
   <thead>
     <tr>
       <td>#</td>
@@ -94,8 +105,8 @@ Panel data as <a href="/json">json</a> or <a href="/rich">html</a>
 {% endfor %}
 </table>
 
-<h3>Expanders</h3>
-<table>
+<h3 id="expanders">Expanders</h3>
+<table class="table table-striped">
   <thead>
     <tr>
       <td>#</td>
@@ -118,8 +129,8 @@ Panel data as <a href="/json">json</a> or <a href="/rich">html</a>
 {% endfor %}
 </table>
 
-<h3>Outputs</h3>
-<table>
+<h3 id="outputs">Outputs</h3>
+<table class="table table-striped">
   <thead>
     <tr>
       <td>#</td>
@@ -134,3 +145,4 @@ Panel data as <a href="/json">json</a> or <a href="/rich">html</a>
 {% endfor %}
 </table>
 
+{% endblock %}

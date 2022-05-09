@@ -4,17 +4,22 @@ import json
 import jinja2
 
 
-@aiohttp_jinja2.template("index.jinja2")
+@aiohttp_jinja2.template("template.jinja2")
 async def handle_index(request):
     panel = request.app["panel"]
     return {"panel": panel.decode()}
 
 
-async def handle_json(request):
-    text = "Config\n\n"
+async def handle_json_raw(request):
     panel = request.app["panel"]
     text = text + json.dumps(panel.decode(), indent=4)
     return web.Response(text=text)
+
+@aiohttp_jinja2.template("json.jinja2")
+async def handle_json(request):
+    panel = request.app["panel"]
+    text = json.dumps(panel.decode(), indent=4)
+    return {'json': text }
 
 
 @aiohttp_jinja2.template("config.jinja2")
@@ -28,9 +33,9 @@ def get_web_app(mem, io, args, panel):
     app = web.Application()
     app.add_routes(
         [
-            web.get("/", handle_index),
+            web.get("/", handle_config),
             web.get("/json", handle_json),
-            web.get("/config", handle_config),
+            web.static('/static', "static", show_index=True),
         ]
     )
     aiohttp_jinja2.setup(app, loader=jinja2.FileSystemLoader("templates"))

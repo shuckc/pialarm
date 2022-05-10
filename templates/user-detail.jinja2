@@ -1,0 +1,15 @@
+{% extends "template.jinja2" %}
+{% block content %}
+
+
+<div class="mb-3">
+    <label class="form-label">Password</label>
+    <div class="input-group mb-3">
+        <input class="form-control password" id="password" class="block mt-1 w-full" type="password" name="password" required />
+        <span class="input-group-text togglePassword" id="">
+            <i data-feather="eye" style="cursor: pointer"></i>
+        </span>
+    </div>
+</div>
+
+{% endblock %}

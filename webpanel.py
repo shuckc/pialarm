@@ -15,11 +15,12 @@ async def handle_json_raw(request):
     text = text + json.dumps(panel.decode(), indent=4)
     return web.Response(text=text)
 
+
 @aiohttp_jinja2.template("json.jinja2")
 async def handle_json(request):
     panel = request.app["panel"]
     text = json.dumps(panel.decode(), indent=4)
-    return {'json': text }
+    return {"json": text}
 
 
 @aiohttp_jinja2.template("config.jinja2")
@@ -29,13 +30,19 @@ async def handle_config(request):
     return {"panel": panel.decode()}
 
 
+@aiohttp_jinja2.template("user-detail.jinja2")
+async def handle_user_detail(request):
+    return {"user": ""}
+
+
 def get_web_app(mem, io, args, panel):
     app = web.Application()
     app.add_routes(
         [
             web.get("/", handle_config),
+            web.get("/user", handle_user_detail),
             web.get("/json", handle_json),
-            web.static('/static', "static", show_index=True),
+            web.static("/static", "static", show_index=True),
         ]
     )
     aiohttp_jinja2.setup(app, loader=jinja2.FileSystemLoader("templates"))

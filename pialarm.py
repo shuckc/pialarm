@@ -116,8 +116,19 @@ class MemStore:
             self.backing_array[key] = value
 
 
+def get_panel_decoder(args, mem, io):
+    if args.panel.startswith("Elite 24"):
+        return WintexEliteDecoder(mem, io, 24)
+    else:
+        return WintexMemDecoder(mem, io)
+
+
 class WintexMemDecoder:
-    def __init__(self, mem, io):
+    pass
+
+
+class WintexEliteDecoder:
+    def __init__(self, mem, io, count=24):
         # Probably these can be determined from the panel type. These work for
         # a Premier Elite 24
         self.zones = 24

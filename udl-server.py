@@ -2,7 +2,7 @@
 import argparse
 import asyncio
 from itertools import count
-from pialarm import SerialWintex, MemStore, WintexMemDecoder
+from pialarm import SerialWintex, MemStore, WintexMemDecoder, get_panel_decoder
 import webpanel
 from functools import partial
 import os
@@ -224,7 +224,7 @@ async def main():
             args.mem, size=0x4000, file_offset=0x8000
         ) as io:
 
-            panel = WintexMemDecoder(mem, io)
+            panel = get_panel_decoder(args, mem, io)
             server = await asyncio.start_server(
                 partial(udl_server, mem, io, args), None, args.udl_port
             )
